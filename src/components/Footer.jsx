@@ -16,6 +16,7 @@ const Left = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px;
+    gap: 20px;
 `
 
 const Logo = styled.h1`
@@ -81,7 +82,7 @@ const Footer = () => {
     <Container>
       <Left>
           <Logo>
-              LAMA
+              LOGO
           </Logo>
           <Desc>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor eius quasi et eligendi natus iusto? Necessitatibus natus nostrum eos ipsam molestiae, ex vero porro ratione explicabo unde, eveniet aspernatur commodi?
