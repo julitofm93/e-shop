@@ -4,6 +4,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Badge from '@mui/material/Badge';
 import {mobile} from "../responsive.js"
+import {useSelector} from 'react-redux';
+import { Link } from 'react-router-dom';
+import Dropdown from './Dropdown';
+import zIndex from '@mui/material/styles/zIndex';
 
 const Container = styled.div`
   height: 60px;
@@ -65,7 +69,11 @@ margin-left: 25px;
 ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `
 
+
 const Navbar = () => {
+  const quantity = useSelector(state=>state.cart.quantity)
+
+const userInfo = true;
   return (
     <Container>
       <Wrapper>
@@ -77,16 +85,30 @@ const Navbar = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>LOGO</Logo>
+          <Link to={"/"} style={{textDecoration: "none"}}>
+            <Logo>LOGO</Logo>
+          </Link>
         </Center>
         <Right>
+         {userInfo ? (
+         <Dropdown style={{ zIndex: "100" }} />
+         /* <Link to={"/"}>hola</Link> */) : (
+          <>
+          <Link to="/register" style={{textDecoration: "none"}}>
           <MenuItem>Register</MenuItem>
+          </Link>
+          <Link to="/login" style={{textDecoration: "none"}}>
           <MenuItem>Log In</MenuItem>
+          </Link>
+          </>
+          )}
+          <Link to="/cart">
           <MenuItem>
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={quantity} color="primary">
               <ShoppingCartOutlinedIcon color="action" />
             </Badge>
           </MenuItem>
+          </Link>
         </Right>
       </Wrapper>
     </Container>

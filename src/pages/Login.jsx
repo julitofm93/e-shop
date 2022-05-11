@@ -1,15 +1,18 @@
+import React from 'react';
+import { useNavigate } from "react-router-dom";
 import styled from 'styled-components'
 import { mobile } from '../responsive'
+import { useState } from 'react'
+import { login } from '../redux/apiCalls'
+import { useDispatch, useSelector } from 'react-redux'
+import Announcement from '../components/Announcement'
+import Navbar from '../components/Navbar'
+import { loginSuccess } from '../redux/userRedux';
 
-const Container = styled.div`
+
+ const Container = styled.div`
     width: 100vw;
-    height: 100vh;
-    background: linear-gradient(
-        rgba(0,0,0,0.5),
-        rgba(0,0,0,0.5)
-    ),
-    url("https://wallpaperaccess.com/full/4621939.jpg");
-    background-size: cover;
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,6 +22,7 @@ const Wrapper = styled.div`
     width: 25%;
     background-color: white;
     justify-content: center;
+    border: 1px solid gray;
     ${mobile({ width: "75%"})}
 `
 
@@ -46,6 +50,10 @@ const Button = styled.button`
     color: white;
     cursor: pointer;
     margin-bottom: 10px;
+    &:disabled {
+    color: gray;
+    cursor: not-allowed;
+  }
 `
 const Link = styled.a`
     margin: 5px 0px;
@@ -53,22 +61,61 @@ const Link = styled.a`
     text-decoration: underline;
     cursor: pointer;
 `
+const Error = styled.span`
+    color: red;
+    `;
 
 const Login = () => {
-  return (
-    <Container>
-        <Wrapper>
-            <Title>sign in</Title>
-            <Form>
-                <Input placeholder="username"/>
-                <Input placeholder="password"/>
-                <Button>LOGIN</Button>
-                <Link>DO NOT REMEMBER?</Link>
-                <Link>CREATE A NEW ACCOUNT</Link>
-            </Form>
-        </Wrapper>
-    </Container>
-  )
-}
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const { isFetching, error } = useSelector((state) => state.user);
+    const navigate = useNavigate(); 
+    
+    const routeChange = () =>{ 
+      let path = "/register"; 
+      navigate(path);
+    };
 
-export default Login
+    const handleClick = (e) => {
+      e.preventDefault();
+      login(dispatch, { username, password });
+/*       if(loginSuccess){
+        let path = "/"; 
+      navigate(path);
+      } */
+    };
+
+
+
+  return (
+    <div>
+      <Announcement/>
+      <Navbar/>
+      <Container>
+      <Wrapper>
+        <Title>SIGN IN</Title>
+        <Form>
+          <Input
+            placeholder="username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            placeholder="password"
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button onClick={handleClick} disabled={isFetching}>
+            LOGIN
+          </Button>
+          {error && <Error>Something went wrong...</Error>}
+          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
+          <Link onClick={routeChange}>CREATE A NEW ACCOUNT</Link>
+        </Form>
+      </Wrapper>
+      </Container>
+    </div>
+  );
+};
+
+export default Login;
